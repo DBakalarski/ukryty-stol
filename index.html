@@ -311,6 +311,128 @@
             60% { transform: rotate(45deg) translateY(4px); }
         }
 
+        /* ───── SCROLL PROGRESS BAR ───── */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), #e0c48a, var(--gold));
+            width: 0%;
+            z-index: 1001;
+            transition: none;
+        }
+
+        /* ───── HERO GLOW PULSE ───── */
+        .hero-title {
+            text-shadow: 0 0 40px rgba(200, 169, 110, 0);
+            animation: heroSlideUp 1s ease-out 0.6s forwards, glowPulse 4s ease-in-out 2s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(200, 169, 110, 0), 0 0 60px rgba(200, 169, 110, 0); }
+            50% { text-shadow: 0 0 30px rgba(200, 169, 110, 0.3), 0 0 80px rgba(200, 169, 110, 0.15); }
+        }
+
+        /* ───── HERO PARTICLES CANVAS ───── */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ───── MARQUEE ───── */
+        .marquee-section {
+            background: var(--navy);
+            padding: 1.2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marqueeScroll 20s linear infinite;
+        }
+
+        .marquee-track span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gold);
+            white-space: nowrap;
+            padding: 0 2rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ───── TEXT REVEAL ───── */
+        .reveal-text {
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .reveal-text.revealed {
+            clip-path: inset(0 0 0 0);
+        }
+
+        .reveal-label {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.6s ease 0.3s;
+        }
+
+        .reveal-label.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-line {
+            transform: scaleX(0);
+            transition: transform 0.6s ease 0.5s;
+        }
+
+        .reveal-line.revealed {
+            transform: scaleX(1);
+        }
+
+        /* ───── IMAGE CURTAIN REVEAL ───── */
+        .curtain-reveal {
+            position: relative;
+        }
+
+        .curtain-reveal::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            z-index: 3;
+            transform: scaleY(1);
+            transform-origin: top;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .curtain-reveal.revealed::before {
+            transform: scaleY(0);
+            transform-origin: bottom;
+        }
+
+        /* ───── MAGNETIC TILT ───── */
+        .services-grid {
+            perspective: 1000px;
+        }
+
+        .service-card {
+            transform-style: preserve-3d;
+        }
+
         /* ───── SECTIONS COMMON ───── */
         .section {
             padding: 7rem 5%;
@@ -963,6 +1085,9 @@
 </head>
 <body>
 
+    <!-- SCROLL PROGRESS -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
         <a href="#" class="nav-logo">
@@ -985,6 +1110,7 @@
     <section class="hero" id="hero">
         <div class="hero-bg" id="heroBg"></div>
         <div class="hero-overlay"></div>
+        <canvas class="hero-particles" id="heroParticles"></canvas>
         <div class="hero-content">
             <img src="logo-chef.jpg" alt="Ukryty Stół" class="hero-logo">
             <h1 class="hero-title">Ukryty Stół</h1>
@@ -1003,9 +1129,9 @@
     <!-- ABOUT -->
     <section class="section about" id="about">
         <div class="section-header">
-            <p class="section-label" data-aos="fade-up">Poznaj mnie</p>
-            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">O mnie</h2>
-            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+            <p class="section-label reveal-label">Poznaj mnie</p>
+            <h2 class="section-title reveal-text">O mnie</h2>
+            <div class="section-line reveal-line"></div>
         </div>
         <div class="about-grid">
             <div class="about-image" data-aos="fade-right" data-aos-duration="800">
@@ -1035,12 +1161,32 @@
         </div>
     </section>
 
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span>WARSZTATY</span><span>&bull;</span>
+            <span>POKAZY</span><span>&bull;</span>
+            <span>LIVE COOKING</span><span>&bull;</span>
+            <span>SMAK</span><span>&bull;</span>
+            <span>PASJA</span><span>&bull;</span>
+            <span>ENERGIA</span><span>&bull;</span>
+            <span>AROMAT</span><span>&bull;</span>
+            <span>WARSZTATY</span><span>&bull;</span>
+            <span>POKAZY</span><span>&bull;</span>
+            <span>LIVE COOKING</span><span>&bull;</span>
+            <span>SMAK</span><span>&bull;</span>
+            <span>PASJA</span><span>&bull;</span>
+            <span>ENERGIA</span><span>&bull;</span>
+            <span>AROMAT</span><span>&bull;</span>
+        </div>
+    </div>
+
     <!-- SERVICES -->
     <section class="section services" id="services">
         <div class="section-header">
-            <p class="section-label" data-aos="fade-up">Co oferuję</p>
-            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Oferta</h2>
-            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+            <p class="section-label reveal-label">Co oferuję</p>
+            <h2 class="section-title reveal-text">Oferta</h2>
+            <div class="section-line reveal-line"></div>
         </div>
         <div class="services-grid">
             <div class="service-card" data-aos="fade-up" data-aos-delay="0">
@@ -1064,28 +1210,28 @@
     <!-- GALLERY -->
     <section class="section gallery" id="gallery">
         <div class="section-header">
-            <p class="section-label" data-aos="fade-up">Portfolio</p>
-            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Galeria</h2>
-            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+            <p class="section-label reveal-label">Portfolio</p>
+            <h2 class="section-title reveal-text">Galeria</h2>
+            <div class="section-line reveal-line"></div>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-item" data-aos="fade-up" data-aos-duration="600" onclick="openLightbox(this)">
+            <div class="gallery-item curtain-reveal" onclick="openLightbox(this)">
                 <img src="aa.jpg" alt="Warsztaty kulinarne — grupa">
                 <span class="gallery-caption">Warsztaty kulinarne</span>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600" onclick="openLightbox(this)">
+            <div class="gallery-item curtain-reveal" onclick="openLightbox(this)">
                 <img src="zdj13.jpg" alt="Krem z kalafiora — podany na talerzu">
                 <span class="gallery-caption">Sztuka na talerzu</span>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600" onclick="openLightbox(this)">
+            <div class="gallery-item curtain-reveal" onclick="openLightbox(this)">
                 <img src="zdju.jpg" alt="Polędwica z warzywami">
                 <span class="gallery-caption">Wyrafinowane dania</span>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600" onclick="openLightbox(this)">
+            <div class="gallery-item curtain-reveal" onclick="openLightbox(this)">
                 <img src="zdjxd.jpg" alt="Fabian kroi mięso — technika">
                 <span class="gallery-caption">Technika i precyzja</span>
             </div>
-            <div class="gallery-item" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600" onclick="openLightbox(this)">
+            <div class="gallery-item curtain-reveal" onclick="openLightbox(this)">
                 <img src="ss.jpg" alt="Uczestniczka przygotowuje danie">
                 <span class="gallery-caption">Wspólne gotowanie</span>
             </div>
@@ -1095,9 +1241,9 @@
     <!-- CONTACT -->
     <section class="section contact" id="contact">
         <div class="section-header">
-            <p class="section-label" data-aos="fade-up">Zapraszam</p>
-            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Stwórzmy razem coś wyjątkowego</h2>
-            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+            <p class="section-label reveal-label">Zapraszam</p>
+            <h2 class="section-title reveal-text">Stwórzmy razem coś wyjątkowego</h2>
+            <div class="section-line reveal-line"></div>
         </div>
         <div class="contact-content" data-aos="fade-up" data-aos-delay="300">
             <p class="contact-desc">Chcesz zorganizować warsztaty dla swojego zespołu? Planujesz event z live cooking? A może szukasz wyjątkowego prezentu? Napisz — razem stworzymy niezapomniane doświadczenie kulinarne.</p>
@@ -1185,12 +1331,18 @@
             offset: 80
         });
 
-        // ── Navbar scroll ──
+        // ── Scroll progress bar + Navbar ──
         const navbar = document.getElementById('navbar');
         const heroBg = document.getElementById('heroBg');
+        const scrollProgress = document.getElementById('scrollProgress');
 
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollY / docHeight) * 100;
+
+            // Scroll progress bar
+            scrollProgress.style.width = scrollPercent + '%';
 
             // Navbar solid background
             if (scrollY > 80) {
@@ -1258,6 +1410,137 @@
         }, { threshold: 0.5 });
 
         counters.forEach(c => counterObserver.observe(c));
+
+        // ── Hero particles ──
+        (function() {
+            const canvas = document.getElementById('heroParticles');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animFrame;
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + 10;
+                    this.size = Math.random() * 2.5 + 0.5;
+                    this.speedY = -(Math.random() * 0.8 + 0.2);
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.6 + 0.2;
+                    this.life = 0;
+                    this.maxLife = Math.random() * 300 + 200;
+                    this.flickerSpeed = Math.random() * 0.02 + 0.01;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.life++;
+                    this.opacity = (Math.sin(this.life * this.flickerSpeed) * 0.3 + 0.4) *
+                        (1 - this.life / this.maxLife);
+                    if (this.life >= this.maxLife || this.y < -10) this.reset();
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 169, 110, ${this.opacity})`;
+                    ctx.fill();
+                    // glow
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(200, 169, 110, ${this.opacity * 0.15})`;
+                    ctx.fill();
+                }
+            }
+
+            const count = window.innerWidth < 768 ? 25 : 50;
+            for (let i = 0; i < count; i++) {
+                const p = new Particle();
+                p.y = Math.random() * canvas.height;
+                p.life = Math.random() * p.maxLife;
+                particles.push(p);
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                animFrame = requestAnimationFrame(animate);
+            }
+            animate();
+
+            // Pause when not visible
+            const heroObs = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    if (!animFrame) animate();
+                } else {
+                    cancelAnimationFrame(animFrame);
+                    animFrame = null;
+                }
+            });
+            heroObs.observe(document.getElementById('hero'));
+        })();
+
+        // ── Text reveal observer ──
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const header = entry.target;
+                    const label = header.querySelector('.reveal-label');
+                    const title = header.querySelector('.reveal-text');
+                    const line = header.querySelector('.reveal-line');
+                    if (label) label.classList.add('revealed');
+                    if (title) setTimeout(() => title.classList.add('revealed'), 150);
+                    if (line) setTimeout(() => line.classList.add('revealed'), 300);
+                    revealObserver.unobserve(header);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.section-header').forEach(h => revealObserver.observe(h));
+
+        // ── Gallery curtain reveal ──
+        const curtainObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('revealed');
+                    }, i * 150);
+                    curtainObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.curtain-reveal').forEach(el => curtainObserver.observe(el));
+
+        // ── Magnetic tilt on service cards ──
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+                card.style.transition = 'transform 0.5s ease';
+                setTimeout(() => { card.style.transition = ''; }, 500);
+            });
+
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'none';
+            });
+        });
 
         // ── Contact form ──
         const contactForm = document.getElementById('contactForm');
