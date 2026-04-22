@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukryty Stół — Warsztaty kulinarne | Pokazy | Live Cooking</title>
+    <meta name="description" content="Ukryty Stół — wyjątkowe doświadczenia kulinarne. Warsztaty, pokazy i live cooking z szefem kuchni Fabianem Budnikiem.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #2F3E50;
+            --cream: #F5F0E8;
+            --gold: #C8A96E;
+            --off-white: #FDFBF7;
+            --dark: #1A2530;
+            --navy-light: #3d5068;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--navy);
+            background: var(--off-white);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ───── NAVBAR ───── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.2rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(245, 240, 232, 0.97);
+            backdrop-filter: blur(12px);
+            padding: 0.8rem 5%;
+            box-shadow: 0 2px 30px rgba(0,0,0,0.08);
+        }
+
+        .nav-logo img {
+            height: 50px;
+            transition: height 0.4s ease;
+        }
+
+        .navbar.scrolled .nav-logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .navbar.scrolled .nav-links a {
+            color: var(--navy);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled .hamburger span {
+            background: var(--navy);
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ───── HERO ───── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('zdj.jpg') center center / cover no-repeat;
+            transform: scale(1.1);
+            will-change: transform;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(26, 37, 48, 0.5) 0%,
+                rgba(26, 37, 48, 0.7) 50%,
+                rgba(26, 37, 48, 0.85) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            padding: 0 1rem;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: heroFadeIn 1s ease-out 0.3s forwards;
+            border: 3px solid rgba(200, 169, 110, 0.4);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroSlideUp 1s ease-out 0.6s forwards;
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(0.9rem, 2vw, 1.15rem);
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            margin-top: 1.2rem;
+            color: var(--gold);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroSlideUp 1s ease-out 0.9s forwards;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            margin: 2rem auto;
+            opacity: 0;
+            animation: heroFadeIn 1s ease-out 1.1s forwards;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            font-weight: 300;
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.85);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroSlideUp 1s ease-out 1.2s forwards;
+        }
+
+        .hero-cta {
+            margin-top: 2.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroSlideUp 1s ease-out 1.5s forwards;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 1rem 2.8rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--dark);
+            background: var(--gold);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .btn-primary:hover {
+            background: #d4b87a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(200, 169, 110, 0.35);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes heroFadeIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes heroSlideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            opacity: 0;
+            animation: heroFadeIn 1s ease-out 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
+            transform: rotate(45deg);
+            animation: scrollBounce 2s infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 20%, 50%, 80%, 100% { transform: rotate(45deg) translateY(0); }
+            40% { transform: rotate(45deg) translateY(8px); }
+            60% { transform: rotate(45deg) translateY(4px); }
+        }
+
+        /* ───── SECTIONS COMMON ───── */
+        .section {
+            padding: 7rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .section-line {
+            width: 50px;
+            height: 2px;
+            background: var(--gold);
+            margin: 1.5rem auto 0;
+        }
+
+        /* ───── ABOUT ───── */
+        .about {
+            background: var(--off-white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-image::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--gold);
+            z-index: -1;
+        }
+
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--navy);
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--navy-light);
+            margin-bottom: 1rem;
+        }
+
+        .about-text .gold-line {
+            width: 40px;
+            height: 2px;
+            background: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(47, 62, 80, 0.1);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--navy-light);
+            margin-top: 0.3rem;
+        }
+
+        /* ───── SERVICES ───── */
+        .services {
+            background: var(--cream);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--off-white);
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(47, 62, 80, 0.12);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--navy);
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--navy-light);
+        }
+
+        /* ───── GALLERY ───── */
+        .gallery {
+            background: var(--off-white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item:nth-child(1) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:not(:first-child) img {
+            height: 250px;
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(26, 37, 48, 0.6) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+            filter: brightness(1.05);
+        }
+
+        .gallery-item .gallery-caption {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ───── CONTACT ───── */
+        .contact {
+            background: var(--navy);
+            color: #fff;
+            text-align: center;
+        }
+
+        .contact .section-title {
+            color: #fff;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-desc {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-item svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--gold);
+        }
+
+        .contact-item span {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .contact-item a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(200, 169, 110, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .social-links a svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--gold);
+            transition: fill 0.3s;
+        }
+
+        .social-links a:hover svg {
+            fill: var(--dark);
+        }
+
+        /* ───── CONTACT FORM ───── */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            text-align: left;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #fff;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.35);
+        }
+
+        .form-group select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23C8A96E' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        .form-group select option {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #e74c3c;
+        }
+
+        .form-group .error-msg {
+            font-size: 0.75rem;
+            color: #e74c3c;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        .form-group.error .error-msg {
+            display: block;
+        }
+
+        .form-submit {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .form-submit .btn-primary {
+            width: 100%;
+            padding: 1.1rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-success {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+
+        .form-success.active {
+            display: block;
+            animation: heroSlideUp 0.6s ease-out forwards;
+        }
+
+        .form-success .success-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .form-success h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .form-success p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ───── FOOTER ───── */
+        .footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 2rem 5%;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        /* ───── LIGHTBOX ───── */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close::before,
+        .lightbox-close::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background: #fff;
+        }
+
+        .lightbox-close::before { transform: rotate(45deg); }
+        .lightbox-close::after { transform: rotate(-45deg); }
+
+        /* ───── MOBILE ───── */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--cream);
+                flex-direction: column;
+                padding: 6rem 2rem;
+                gap: 2rem;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                color: var(--navy) !important;
+                font-size: 1.1rem;
+            }
+
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-image img {
+                height: 350px;
+            }
+
+            .about-image::after {
+                display: none;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .gallery-item:nth-child(1) {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            .gallery-item:not(:first-child) img {
+                height: 200px;
+            }
+
+            .about-stats {
+                gap: 1.5rem;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .hero-logo {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section {
+                padding: 5rem 5%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-item:nth-child(1) {
+                grid-column: span 1;
+            }
+
+            .gallery-item:not(:first-child) img {
+                height: 220px;
+            }
+
+            .about-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo">
+            <img src="logo-chef.jpg" alt="Ukryty Stół">
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about" onclick="closeMenu()">O mnie</a></li>
+            <li><a href="#services" onclick="closeMenu()">Oferta</a></li>
+            <li><a href="#gallery" onclick="closeMenu()">Galeria</a></li>
+            <li><a href="#contact" onclick="closeMenu()">Kontakt</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <img src="logo-chef.jpg" alt="Ukryty Stół" class="hero-logo">
+            <h1 class="hero-title">Ukryty Stół</h1>
+            <p class="hero-subtitle">Warsztaty kulinarne &bull; Pokazy &bull; Live Cooking</p>
+            <div class="hero-divider"></div>
+            <p class="hero-desc">Tworzymy wyjątkowe doświadczenia kulinarne, które zostają w pamięci na długo. Bez zadęcia, za to z sercem, aromatem i dobrą energią.</p>
+            <div class="hero-cta">
+                <a href="#about" class="btn-primary">Odkryj więcej</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+        <div class="section-header">
+            <p class="section-label" data-aos="fade-up">Poznaj mnie</p>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">O mnie</h2>
+            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+        </div>
+        <div class="about-grid">
+            <div class="about-image" data-aos="fade-right" data-aos-duration="800">
+                <img src="zdj11.jpg" alt="Fabian Budnik prowadzi warsztaty kulinarne">
+            </div>
+            <div class="about-text" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+                <div class="gold-line"></div>
+                <h3>Fabian Budnik</h3>
+                <p>Jestem szefem kuchni, dla którego gotowanie to coś więcej niż zawód — to sposób na łączenie ludzi, dzielenie się pasją i tworzenie chwil, które zostają w pamięci.</p>
+                <p>W Ukrytym Stole odkryjesz kuchnię od zaplecza. Prowadzę warsztaty kulinarne, pokazy i eventy live cooking, w których każdy — od amatora po doświadczonego kucharza — znajdzie coś dla siebie.</p>
+                <p>Moja filozofia? Bez zadęcia, za to z sercem i dobrą energią. Każde spotkanie to nie tylko nauka nowych technik, ale przede wszystkim świetna zabawa i wspólne gotowanie w najlepszej atmosferze.</p>
+                <div class="about-stats">
+                    <div class="stat" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-number" data-count="500">0</div>
+                        <div class="stat-label">Uczestników</div>
+                    </div>
+                    <div class="stat" data-aos="fade-up" data-aos-delay="500">
+                        <div class="stat-number" data-count="120">0</div>
+                        <div class="stat-label">Warsztatów</div>
+                    </div>
+                    <div class="stat" data-aos="fade-up" data-aos-delay="600">
+                        <div class="stat-number" data-count="10">0</div>
+                        <div class="stat-label">Lat doświadczenia</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section services" id="services">
+        <div class="section-header">
+            <p class="section-label" data-aos="fade-up">Co oferuję</p>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Oferta</h2>
+            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+        </div>
+        <div class="services-grid">
+            <div class="service-card" data-aos="fade-up" data-aos-delay="0">
+                <span class="service-icon">&#127860;</span>
+                <h3>Warsztaty kulinarne</h3>
+                <p>Praktyczne zajęcia w kameralnej grupie, gdzie samodzielnie przygotujesz dania pod okiem szefa kuchni. Nauka technik, degustacja i wspólna uczta.</p>
+            </div>
+            <div class="service-card" data-aos="fade-up" data-aos-delay="150">
+                <span class="service-icon">&#127869;</span>
+                <h3>Pokazy kulinarne</h3>
+                <p>Widowiskowe pokazy gotowania na żywo — idealnie na eventy firmowe, festiwale i imprezy prywatne. Energia, aromat i spektakl w jednym.</p>
+            </div>
+            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                <span class="service-icon">&#128293;</span>
+                <h3>Live Cooking</h3>
+                <p>Gotowanie na żywo przy gościach — interaktywne doświadczenie, które angażuje wszystkie zmysły. Flambowanie, techniki i showmanship na najwyższym poziomie.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section gallery" id="gallery">
+        <div class="section-header">
+            <p class="section-label" data-aos="fade-up">Portfolio</p>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Galeria</h2>
+            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item" data-aos="fade-up" data-aos-duration="600" onclick="openLightbox(this)">
+                <img src="aa.jpg" alt="Warsztaty kulinarne — grupa">
+                <span class="gallery-caption">Warsztaty kulinarne</span>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600" onclick="openLightbox(this)">
+                <img src="zdj13.jpg" alt="Krem z kalafiora — podany na talerzu">
+                <span class="gallery-caption">Sztuka na talerzu</span>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600" onclick="openLightbox(this)">
+                <img src="zdju.jpg" alt="Polędwica z warzywami">
+                <span class="gallery-caption">Wyrafinowane dania</span>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="150" data-aos-duration="600" onclick="openLightbox(this)">
+                <img src="zdjxd.jpg" alt="Fabian kroi mięso — technika">
+                <span class="gallery-caption">Technika i precyzja</span>
+            </div>
+            <div class="gallery-item" data-aos="fade-up" data-aos-delay="250" data-aos-duration="600" onclick="openLightbox(this)">
+                <img src="ss.jpg" alt="Uczestniczka przygotowuje danie">
+                <span class="gallery-caption">Wspólne gotowanie</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section contact" id="contact">
+        <div class="section-header">
+            <p class="section-label" data-aos="fade-up">Zapraszam</p>
+            <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">Stwórzmy razem coś wyjątkowego</h2>
+            <div class="section-line" data-aos="fade-up" data-aos-delay="200"></div>
+        </div>
+        <div class="contact-content" data-aos="fade-up" data-aos-delay="300">
+            <p class="contact-desc">Chcesz zorganizować warsztaty dla swojego zespołu? Planujesz event z live cooking? A może szukasz wyjątkowego prezentu? Napisz — razem stworzymy niezapomniane doświadczenie kulinarne.</p>
+
+            <!-- FORMULARZ -->
+            <form class="contact-form" id="contactForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Imię</label>
+                        <input type="text" id="name" name="name" placeholder="Twoje imię" required>
+                        <span class="error-msg">Podaj swoje imię</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="twoj@email.pl" required>
+                        <span class="error-msg">Podaj poprawny adres email</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Temat</label>
+                    <select id="subject" name="subject" required>
+                        <option value="" disabled selected>Wybierz temat...</option>
+                        <option value="warsztaty">Warsztaty kulinarne</option>
+                        <option value="pokazy">Pokazy kulinarne</option>
+                        <option value="live-cooking">Live Cooking</option>
+                        <option value="inne">Inne</option>
+                    </select>
+                    <span class="error-msg">Wybierz temat wiadomości</span>
+                </div>
+                <div class="form-group">
+                    <label for="message">Wiadomość</label>
+                    <textarea id="message" name="message" placeholder="Opisz swój pomysł na event..." required></textarea>
+                    <span class="error-msg">Napisz wiadomość</span>
+                </div>
+                <div class="form-submit">
+                    <button type="submit" class="btn-primary">Wyślij wiadomość</button>
+                </div>
+            </form>
+
+            <div class="form-success" id="formSuccess">
+                <span class="success-icon">&#10003;</span>
+                <h3>Dziękuję!</h3>
+                <p>Twoja wiadomość została wysłana. Odezwę się wkrótce.</p>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    <a href="tel:+48123456789">+48 123 456 789</a>
+                </div>
+                <div class="contact-item">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <a href="mailto:kontakt@ukrytystol.pl">kontakt@ukrytystol.pl</a>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2026 Ukryty Stół — Fabian Budnik. Wszelkie prawa zastrzeżone.</p>
+    </footer>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-close"></div>
+        <img src="" alt="Podgląd zdjęcia" id="lightboxImg">
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // ── AOS Init ──
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 80
+        });
+
+        // ── Navbar scroll ──
+        const navbar = document.getElementById('navbar');
+        const heroBg = document.getElementById('heroBg');
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+
+            // Navbar solid background
+            if (scrollY > 80) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Parallax hero background
+            if (scrollY < window.innerHeight) {
+                heroBg.style.transform = `scale(1.1) translateY(${scrollY * 0.3}px)`;
+            }
+        });
+
+        // ── Mobile menu ──
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+            document.getElementById('hamburger').classList.toggle('active');
+        }
+
+        function closeMenu() {
+            document.getElementById('navLinks').classList.remove('active');
+            document.getElementById('hamburger').classList.remove('active');
+        }
+
+        // ── Lightbox ──
+        function openLightbox(el) {
+            const img = el.querySelector('img');
+            document.getElementById('lightboxImg').src = img.src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // ── Counter animation ──
+        const counters = document.querySelectorAll('.stat-number[data-count]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-count'));
+                    const suffix = target >= 100 ? '+' : '+';
+                    let current = 0;
+                    const increment = target / 60;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.textContent = target + suffix;
+                            clearInterval(timer);
+                        } else {
+                            el.textContent = Math.floor(current);
+                        }
+                    }, 25);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(c => counterObserver.observe(c));
+
+        // ── Contact form ──
+        const contactForm = document.getElementById('contactForm');
+        const formSuccess = document.getElementById('formSuccess');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+
+            // Reset errors
+            this.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+
+            // Validate name
+            const name = this.querySelector('#name');
+            if (!name.value.trim()) {
+                name.closest('.form-group').classList.add('error');
+                valid = false;
+            }
+
+            // Validate email
+            const email = this.querySelector('#email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim() || !emailRegex.test(email.value)) {
+                email.closest('.form-group').classList.add('error');
+                valid = false;
+            }
+
+            // Validate subject
+            const subject = this.querySelector('#subject');
+            if (!subject.value) {
+                subject.closest('.form-group').classList.add('error');
+                valid = false;
+            }
+
+            // Validate message
+            const message = this.querySelector('#message');
+            if (!message.value.trim()) {
+                message.closest('.form-group').classList.add('error');
+                valid = false;
+            }
+
+            if (valid) {
+                contactForm.style.display = 'none';
+                formSuccess.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
